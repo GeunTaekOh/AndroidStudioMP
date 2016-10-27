@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
+    private long lastTimeBackPressed;
     private LocationManager locationManager;
     MyLocationListener mll = new MyLocationListener();
 
@@ -40,6 +41,23 @@ public class MainActivity extends Activity {
 
 
     }
+    @Override
+    public void onBackPressed(){
+        if(System.currentTimeMillis()-lastTimeBackPressed<1500){
+            finish();
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            }
+            locationManager.removeUpdates(mll);
+            return;
+
+        }
+
+        Toast.makeText(MainActivity.this,"'뒤로' 버튼을 한번 더 누르면 종료됩니다",Toast.LENGTH_SHORT).show();
+        lastTimeBackPressed=System.currentTimeMillis();
+
+    }
+
 
     public void onClick(View v) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
