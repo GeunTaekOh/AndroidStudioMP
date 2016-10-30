@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -22,6 +24,10 @@ public class MainActivity extends Activity {
     private long lastTimeBackPressed;
     private LocationManager locationManager;
     MyLocationListener mll = new MyLocationListener();
+    SQLiteDatabase db;
+    double latitudedouble;
+    double longitudedouble;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,19 @@ public class MainActivity extends Activity {
         }
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, mll);  //3000 -> 3초
+
+        try{
+            db=SQLiteDatabase.openDatabase("/data/data/cis493.sqldatabases/myfriendsDB",null,SQLiteDatabase.CREATE_IF_NECESSARY);
+            db.execSQL("create table location(id INTEGER PRIMARY KEY autoincrement, latitude double, longitude double);");
+            db.execSQL("insert into location(latitude, longitude) values(latitudedouble, longitudedouble);");
+            //db.setTransactionSuccessful();      //이게 커밋하는건데 저장은뭐지
+            db.close();
+
+        }catch(SQLiteException e){
+            Toast.makeText(this,e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+
+
 
 
     }
@@ -74,11 +93,18 @@ public class MainActivity extends Activity {
             TextView tv = (TextView)findViewById(R.id.textview);
             tv.append(str);
             Toast.makeText(getBaseContext(), str, Toast.LENGTH_SHORT).show();
+            latitudedouble = location.getLatitude();
+            longitudedouble = location.getLongitude();
+
+
         }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-
+            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            }
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,3000,10,mll);
         }
 
         @Override
