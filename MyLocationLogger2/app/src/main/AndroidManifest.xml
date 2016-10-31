@@ -11,6 +11,13 @@
         android:label="GeunTaekLocation"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAARQvE9v9DOyPubTFnzJD_WPT9_sP1mUc"/>
+
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
