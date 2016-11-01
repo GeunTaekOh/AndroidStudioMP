@@ -3,7 +3,6 @@ package com.taek_aaa.mylocationlogger;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -62,7 +61,7 @@ public class MainActivity extends Activity {
         }
 
 
-        insertDB();
+     //   insertDB();
 
     }
     @Override
@@ -138,7 +137,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void insertDB(){
+  /*  public void insertDB(){
         ContentValues addRowValue = new ContentValues();
         addRowValue.put("latitude",latitudedouble);
         addRowValue.put("longitude",longitudedouble);
@@ -146,5 +145,5 @@ public class MainActivity extends Activity {
         long insertRecordId = mgpsdbmanager.insert(addRowValue);
         mDisplayDbEt.setText("레코드 추가 : "+insertRecordId);
     }
-
+*/
 }
