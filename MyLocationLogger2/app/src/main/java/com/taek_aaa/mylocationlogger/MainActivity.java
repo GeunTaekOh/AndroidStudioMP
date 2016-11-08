@@ -14,22 +14,23 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
 
+    final DBManager dbManager = new DBManager(this, "GPS.db", null, 1);
     private long lastTimeBackPressed;
     private LocationManager locationManager;
     MyLocationListener mll = new MyLocationListener();
     SQLiteDatabase db;
     double latitudedouble;
     double longitudedouble;
-    EditText mDisplayDbEt = null;
-    public GPSDBManager mgpsdbmanager = null;
+    TextView mDisplayDbEt ;
+//    public GPSDBManager mgpsdbmanager = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +39,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDisplayDbEt = (EditText)findViewById(R.id.dbtv);
-        mgpsdbmanager = GPSDBManager.getInstance(this);
+        mDisplayDbEt = (TextView)findViewById(R.id.dbtv);
         //- SDK 23버전 이상 (마시멜로우 이상부터)부터는 아래 처럼 권한을 사용자가 직접 허가해주어야 GPS기능을 사용가능 GPS 기능을 사용하기전 위치에 추가해야함
         //체크 퍼미션
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -50,18 +50,21 @@ public class MainActivity extends Activity {
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,3000,10,mll);
 
         try{
-            db=SQLiteDatabase.openDatabase("/data/data/cis493.sqldatabases/myfriendsDB",null,SQLiteDatabase.CREATE_IF_NECESSARY);
-            db.execSQL("create table location(id INTEGER PRIMARY KEY autoincrement, latitude double, longitude double);");
-            db.execSQL("insert into location(latitude, longitude) values(latitudedouble, longitudedouble);");
+           // db=SQLiteDatabase.openDatabase("/data/data/cis493.sqldatabases/myfriendsDB",null,SQLiteDatabase.CREATE_IF_NECESSARY);
+            //db.execSQL("create table location(id INTEGER PRIMARY KEY auto increment, latitude double, longitude double);");
+            //db.execSQL("insert into location(latitude, longitude) values(latitudedouble, longitudedouble);");
             //db.setTransactionSuccessful();      //이게 커밋하는건데 저장은뭐지
-            db.close();
+            //db.close();
+
+            /*dbManager.insert(latitudedouble,longitudedouble);
+            Log.i("저장", "성공");
+            dbManager.getResult();
+            Toast.makeText(MainActivity.this, "정상 입력 되었습니다.", Toast.LENGTH_SHORT).show();*/
 
         }catch(SQLiteException e){
             Toast.makeText(this,e.getMessage(),Toast.LENGTH_SHORT).show();
         }
 
-
-     //   insertDB();
 
     }
     @Override
@@ -97,9 +100,15 @@ public class MainActivity extends Activity {
             TextView tv = (TextView)findViewById(R.id.textview);
             tv.append(str);
             Toast.makeText(getBaseContext(), str, Toast.LENGTH_SHORT).show();
+
             latitudedouble = location.getLatitude();
             longitudedouble = location.getLongitude();
 
+
+            dbManager.insert(latitudedouble,longitudedouble);
+            Log.i("저장", "성공");
+            dbManager.getResult();
+            Toast.makeText(MainActivity.this, "DB에 입력 되었습니다.", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -137,13 +146,5 @@ public class MainActivity extends Activity {
         }
     }
 
-  /*  public void insertDB(){
-        ContentValues addRowValue = new ContentValues();
-        addRowValue.put("latitude",latitudedouble);
-        addRowValue.put("longitude",longitudedouble);
 
-        long insertRecordId = mgpsdbmanager.insert(addRowValue);
-        mDisplayDbEt.setText("레코드 추가 : "+insertRecordId);
-    }
-*/
 }

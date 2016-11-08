@@ -15,33 +15,31 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
     <TextView
+        android:layout_height="300dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:minHeight="300dp"
+        android:maxHeight="300dp"
         android:id="@+id/textview"
+
         android:text=""
         />
 </ScrollView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dbtv"
+        android:text=""
+
+        />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="StopGPS"
         android:onClick="onClick"
 
-        />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/dbtv"
-        android:text=""
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/insertbtb"
-        android:onClick="insertClick"
-        android:text="Click"
-        />
+/>
 
 </LinearLayout>
