@@ -45,6 +45,7 @@ public class DBManager extends SQLiteOpenHelper {
 
             Log.i("SQL ", "select : " + "(Latitude" + latitudecur + ")(Longitude:" + longitudecur + ")");
 
+
         }
     }
 }

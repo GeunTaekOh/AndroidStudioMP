@@ -19,9 +19,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
 
 public class MainActivity extends Activity {
-
+    Location mLocation;
+    private GoogleMap mMap;
     final DBManager dbManager = new DBManager(this, "GPS.db", null, 1);
     private long lastTimeBackPressed;
     private LocationManager locationManager;
@@ -30,6 +32,7 @@ public class MainActivity extends Activity {
     double latitudedouble;
     double longitudedouble;
     TextView mDisplayDbEt ;
+    MapsActivity mapAct = new MapsActivity();
 //    public GPSDBManager mgpsdbmanager = null;
 
     @Override
@@ -46,7 +49,7 @@ public class MainActivity extends Activity {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, mll);  //3000 -> 3초
+      //  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, mll);  //3000 -> 3초
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,3000,10,mll);
 
         try{
@@ -96,6 +99,7 @@ public class MainActivity extends Activity {
 
         @Override
         public void onLocationChanged(Location location) {
+            mLocation = location;
             String str = "Latitude: "+location.getLatitude()+"\n"+"Longitude: "+location.getLongitude()+"\n";
             TextView tv = (TextView)findViewById(R.id.textview);
             tv.append(str);
@@ -109,6 +113,8 @@ public class MainActivity extends Activity {
             Log.i("저장", "성공");
             dbManager.getResult();
             Toast.makeText(MainActivity.this, "DB에 입력 되었습니다.", Toast.LENGTH_SHORT).show();
+
+            mLocation = location;
 
         }
 
@@ -146,5 +152,36 @@ public class MainActivity extends Activity {
         }
     }
 
+    public void onclickmapbtn(View v) {
+       /* Intent intent = new Intent(
+                android.content.Intent.ACTION_VIEW,
+                Uri.parse("http://maps.google.com/maps?" + "saddr=9.938083,-84.054430&"
+                        + "daddr=9.926392,-84.055964"));
+        startActivity(intent);
+    }*/
+       /* String thePlace = "University";
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=(" + thePlace + ")"));
+        startActivity(intent);*/
+
+       /* String lastr = Double.toString(latitudedouble);
+        String lonstr = Double.toString(longitudedouble);
+        String geoCode = ""+lastr+", "+""+lonstr;
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoCode));*/
+        mapAct.showMeTheMap(mLocation.getLatitude(),mLocation.getLongitude());
+ //       String reallocation = getText(latitudedouble)  위도경도를 위와 같은 방식으로 바꿔보자
+        //Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoCode));
+        //startActivity(intent);
+///////
+
+    }
+    public void onclicklocationbtn(View v){
+
+        mll.onLocationChanged(mLocation);
+
+    }
+
+
+
 
 }
+
