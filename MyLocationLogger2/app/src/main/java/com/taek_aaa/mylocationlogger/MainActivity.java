@@ -167,11 +167,16 @@ public class MainActivity extends Activity {
         String lonstr = Double.toString(longitudedouble);
         String geoCode = ""+lastr+", "+""+lonstr;
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoCode));*/
-        mapAct.showMeTheMap(mLocation.getLatitude(),mLocation.getLongitude());
- //       String reallocation = getText(latitudedouble)  위도경도를 위와 같은 방식으로 바꿔보자
+      //  mapAct.showMeTheMap(mLocation.getLatitude(),mLocation.getLongitude());
+ //
+        //
+        // String reallocation = getText(latitudedouble)  위도경도를 위와 같은 방식으로 바꿔보자
         //Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoCode));
         //startActivity(intent);
 ///////
+
+        mapAct.onMapReady(mMap);
+       // mapAct.showMeTheMap(latitudedouble,longitudedouble);
 
     }
     public void onclicklocationbtn(View v){
