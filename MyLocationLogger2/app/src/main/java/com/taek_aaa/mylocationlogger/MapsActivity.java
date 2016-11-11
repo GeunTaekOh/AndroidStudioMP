@@ -2,12 +2,14 @@ package com.taek_aaa.mylocationlogger;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -36,19 +38,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        MainActivity mact = new MainActivity();
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-    }
+        double latitude = mact.latitudedouble;
+        double longitude = mact.longitudedouble;
 
-    public void showMeTheMap(double latitude, double longitude){
-        LatLng hereyouare = new LatLng(latitude,longitude);
-        //mMap.addMarker(new MarkerOptions().position(hereyouare).title("Here you are!"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hereyouare,15));
+        LatLng whereyouat = new LatLng(latitude, longitude);
+        mMap.addMarker(new MarkerOptions().position(whereyouat).title("Found you!"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(whereyouat,15));
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
 
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener(){
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Toast.makeText(getApplicationContext(), marker.getTitle()+"클릭했음",Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+
     }
+
+
 }
