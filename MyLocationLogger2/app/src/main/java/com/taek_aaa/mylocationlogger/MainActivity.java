@@ -46,31 +46,32 @@ public class MainActivity extends Activity {
         mll = new MyLocationListener();
         mDisplayDbEt = (TextView)findViewById(R.id.dbtv);
 
-
-
         final Intent mapitt = new Intent(this,MapsActivity.class);
         Button mapbtn = (Button)findViewById(R.id.viewMapbtn);
-
-
-
-
 
         //- SDK 23버전 이상 (마시멜로우 이상부터)부터는 아래 처럼 권한을 사용자가 직접 허가해주어야 GPS기능을 사용가능 GPS 기능을 사용하기전 위치에 추가해야함
         //체크 퍼미션
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
-      //  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, mll);  //3000 -> 3초
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,3000,10,mll);
 
+        boolean isGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean isNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+////
+        if(!isGps && !isNetwork){
+
+
+        }
+
+////
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, mll);  //3000 -> 3초
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,3000,10,mll);
 
         mapbtn.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v) {
                 startActivity(mapitt);
             }
         });
-
-
     }
     @Override
     public void onBackPressed(){
@@ -144,11 +145,7 @@ public class MainActivity extends Activity {
             Toast.makeText(getBaseContext(), "Gps turned off ", Toast.LENGTH_LONG).show();
         }
     }
-/*
-    public void onclickmapbtn(View v) {
-        mapAct = new MapsActivity();
-        mapAct.showMeTheMap(latitudedouble,longitudedouble);
-    }*/
+
     public void onclicklocationbtn(View v){
         mll = new MyLocationListener();
         mll.onLocationChanged(mLocation);
