@@ -88,12 +88,12 @@ public class MainActivity extends Activity {
                     .setNegativeButton("취소", null).show();
             Toast.makeText(getBaseContext(), "Gps turned off ", Toast.LENGTH_LONG).show();
         } else {
-            if (isNetwork) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 10, mll);
+            if (isGps) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, mll);
+                Toast.makeText(this, "GPS로 좌표값을 가져옵니다", Toast.LENGTH_SHORT).show();
+            } else if (isNetwork) {
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, mll);  //3000 -> 3초
                 Toast.makeText(this, "네트워크로 좌표값을 가져옵니다", Toast.LENGTH_SHORT).show();
-            } else if (isGps) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, mll);  //3000 -> 3초
-                Toast.makeText(this, "gps로 좌표값을 가져옵니다", Toast.LENGTH_SHORT).show();
             } else {
                 exit(1);
             }
@@ -155,10 +155,7 @@ public class MainActivity extends Activity {
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-            }
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 10, mll);
+
         }
 
         @Override
@@ -185,8 +182,51 @@ public class MainActivity extends Activity {
     }
 
     public void onclicklocationbtn(View v) {
-        mll = new MyLocationListener();
-        mll.onLocationChanged(mLocation);
+
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, mll);  //3000 -> 3초
+     /*   if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        }
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,mll);*/
+
+         class mLocationListener implements LocationListener{
+
+
+             @Override
+             public void onLocationChanged(Location location) {
+                 Double la = location.getLatitude();
+                 Double lo = location.getLongitude();
+                 String str = "Latitude: " + location.getLatitude() + "\n" + "Longitude: " + location.getLongitude() + "\n";
+                 TextView tv = (TextView) findViewById(R.id.textview);
+                 tv.append(str);
+                 Toast.makeText(getBaseContext(), str, Toast.LENGTH_SHORT).show();
+                 dbManager.insert(la, lo);
+
+                 alistlatitude.add(iter, la);
+                 alistlongitude.add(iter, lo);
+                 alistlocation.add(iter, new LatLng(alistlatitude.get(iter), alistlongitude.get(iter)));
+                 iter++;
+             }
+
+             @Override
+             public void onStatusChanged(String provider, int status, Bundle extras) {
+
+             }
+
+             @Override
+             public void onProviderEnabled(String provider) {
+
+             }
+
+             @Override
+             public void onProviderDisabled(String provider) {
+
+             }
+         }
+
+
+
     }
 }
 
