@@ -38,11 +38,9 @@ public class DBManager extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("INSERT INTO database VALUES(NULL, " + latitude + ", " + longitude + ");");
         String str = "Latitude: "+latitude+"\n"+"Longitude: "+longitude+"\n";
-        //TextView tv = (TextView)findViewById(R.id.textview);
-        //TextView tv = (TextView)findViewById(R.id.textview);
-        //MainActivity mat = new MainActivity();
-        //TextView tv = (TextView)mat.findViewById(R.id.textview);
-        //tv.append(str);
+
+
+
         db.close();
     }
 

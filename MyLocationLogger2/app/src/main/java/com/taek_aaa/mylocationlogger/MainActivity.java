@@ -20,8 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 
-public class MainActivity extends Activity {
+import java.util.ArrayList;
+
+import static java.lang.System.exit;
+
+public class MainActivity extends Activity{
 
     final DBManager dbManager = new DBManager(this, "GPS.db", null, 1);
     private long lastTimeBackPressed;
@@ -31,11 +36,14 @@ public class MainActivity extends Activity {
     public static double latitudedouble;
     public static double longitudedouble;
     TextView mDisplayDbEt ;
-
+    int iter=0;
     MapsActivity mapAct = null;
     MyLocationListener mll = null;
     Location mLocation;
     SQLiteDatabase db;
+    public static ArrayList<Double> alistlatitude=null;
+    public static ArrayList<Double> alistlongitude=null;
+    public static ArrayList<LatLng> alistlocation=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,10 @@ public class MainActivity extends Activity {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mll = new MyLocationListener();
         mDisplayDbEt = (TextView)findViewById(R.id.dbtv);
+
+        alistlatitude = new ArrayList<Double>();
+        alistlongitude = new ArrayList<Double>();
+        alistlocation = new ArrayList<LatLng>();
 
         final Intent mapitt = new Intent(this,MapsActivity.class);
         Button mapbtn = (Button)findViewById(R.id.viewMapbtn);
@@ -59,13 +71,34 @@ public class MainActivity extends Activity {
         boolean isNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 ////
         if(!isGps && !isNetwork){
+            new AlertDialog.Builder(MainActivity.this)
+                    .setMessage("GPS가 꺼져있습니다.\n ‘위치 서비스’에서 ‘Google 위치 서비스’를 체크해주세요")
+                    .setPositiveButton("설정",new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                        }
 
+                    })
+                    .setNegativeButton("취소", null).show();
+            Toast.makeText(getBaseContext(), "Gps turned off ", Toast.LENGTH_LONG).show();
+        }else{
+            if(isNetwork){
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,3000,10,mll);
+                Toast.makeText(this,"네트워크로 좌표값을 가져옵니다",Toast.LENGTH_SHORT).show();
+            }else if(isGps){
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, mll);  //3000 -> 3초
+                Toast.makeText(this,"gps로 좌표값을 가져옵니다",Toast.LENGTH_SHORT).show();
+            }else {
+                exit(1);
+            }
         }
 
 ////
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, mll);  //3000 -> 3초
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,3000,10,mll);
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, mll);  //3000 -> 3초
+       // locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,3000,10,mll);
 
         mapbtn.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v) {
@@ -108,6 +141,11 @@ public class MainActivity extends Activity {
             longitudedouble = location.getLongitude();
 
             dbManager.insert(latitudedouble,longitudedouble);
+
+            alistlatitude.add(iter,latitudedouble);
+            alistlongitude.add(iter,longitudedouble);
+            alistlocation.add(iter,new LatLng(alistlatitude.get(iter), alistlongitude.get(iter)));
+            iter++;
             Log.i("저장", "성공");
             dbManager.getResult();
             Toast.makeText(MainActivity.this, "DB에 입력 되었습니다.", Toast.LENGTH_SHORT).show();
