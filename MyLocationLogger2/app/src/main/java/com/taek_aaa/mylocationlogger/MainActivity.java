@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +33,7 @@ public class MainActivity extends Activity{
     private long lastTimeBackPressed;
     private LocationManager locationManager;
     private GoogleMap mMap;
-
+    ScrollView scroll;
     public static double latitudedouble;
     public static double longitudedouble;
     TextView mDisplayDbEt ;
@@ -57,6 +58,8 @@ public class MainActivity extends Activity{
         alistlatitude = new ArrayList<Double>();
         alistlongitude = new ArrayList<Double>();
         alistlocation = new ArrayList<LatLng>();
+        scroll=(ScrollView)findViewById(R.id.scrollview);
+        scroll.setVerticalScrollBarEnabled(true);
 
         final Intent mapitt = new Intent(this,MapsActivity.class);
         Button mapbtn = (Button)findViewById(R.id.viewMapbtn);

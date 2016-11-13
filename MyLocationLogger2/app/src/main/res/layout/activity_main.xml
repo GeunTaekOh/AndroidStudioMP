@@ -12,21 +12,19 @@
     android:orientation="vertical"
     >
 <ScrollView
-    android:layout_width="wrap_content"
-    android:layout_height="100dp">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:id="@+id/scrollview"
+    >
+
     <TextView
-        android:layout_height="100dp"
+        android:layout_height="300dp"
         android:layout_width="wrap_content"
-        android:minHeight="300dp"
-        android:maxHeight="300dp"
         android:id="@+id/textview"
 
         android:text=""
         />
-    </LinearLayout>
+
 </ScrollView>
 
     <TextView
