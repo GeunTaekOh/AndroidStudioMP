@@ -182,17 +182,7 @@ public class MainActivity extends Activity {
     }
 
     public void onclicklocationbtn(View v) {
-
-        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, mll);  //3000 -> 3초
-     /*   if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-        }
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,mll);*/
-
          class mLocationListener implements LocationListener{
-
-
              @Override
              public void onLocationChanged(Location location) {
                  Double la = location.getLatitude();
@@ -207,6 +197,7 @@ public class MainActivity extends Activity {
                  alistlongitude.add(iter, lo);
                  alistlocation.add(iter, new LatLng(alistlatitude.get(iter), alistlongitude.get(iter)));
                  iter++;
+                 Log.d("lis","한바퀴돔");
              }
 
              @Override

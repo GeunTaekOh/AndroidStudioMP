@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -36,16 +35,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
 
-/*                mMap.setOnMarkerClickListener(new OnMarkerClickListener(){
 
-
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(getApplicationContext(),"컨텍스트클릭",Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
-        );*/
     }
 
     @Override
@@ -67,10 +57,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(newLatLng(mact.alistlocation.get(0)));
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
-        mMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(getApplicationContext(), marker.getTitle() + "일정을 추가합니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),marker.getTitle()+"클릭했음",Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+
                 Date clsTime = new Date();
 
 
@@ -82,9 +80,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 clsIntent.putExtra( events.DESCRIPTION, "일정 내용" );
 
                 startActivity( clsIntent );
-
-                return false;
             }
+
+
         });
 
 
