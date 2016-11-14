@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.google.android.gms.maps.CameraUpdateFactory.newLatLng;
@@ -33,9 +34,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapsInitializer.initialize(getApplicationContext());
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
-
     }
 
     @Override
@@ -68,9 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-
                 Date clsTime = new Date();
-
 
                 Intent clsIntent = new Intent( Intent.ACTION_INSERT );
                 clsIntent.setData( events.CONTENT_URI );
@@ -79,12 +75,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 clsIntent.putExtra( events.TITLE, "일정 제목" );
                 clsIntent.putExtra( events.DESCRIPTION, "일정 내용" );
 
+                SimpleDateFormat df = new SimpleDateFormat("MM/dd/hh:mm");
+                String tmp = String.valueOf(clsTime.getTime());
+                String result = String.format(tmp, df);
+
+
+
+                marker.setTitle(""+result+""+clsIntent.getExtras().getString(events.TITLE));
+
                 startActivity( clsIntent );
             }
-
-
         });
-
-
     }
 }
