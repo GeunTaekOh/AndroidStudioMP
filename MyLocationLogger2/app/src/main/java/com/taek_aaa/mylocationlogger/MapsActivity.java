@@ -1,10 +1,12 @@
 package com.taek_aaa.mylocationlogger;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -48,21 +49,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapsInitializer.initialize(getApplicationContext());
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        Button refreshbtn = (Button)findViewById(R.id.refresh);
+        Button showlistbtn = (Button)findViewById(R.id.showlist);
+        final Intent listitt = new Intent(MapsActivity.this, List.class);
 
-        refreshbtn.setOnClickListener(new Button.OnClickListener(){
+        showlistbtn.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View v) {
-                for (int i = 0; i < slistsize; i++) {
-                    MarkerOptions opt = new MarkerOptions();
-                   /* opt.position(mact2.alistlocation.get(i));
-                    opt.title(mact2.alisttodo.get(i));
-                    opt.snippet(mact2.alisttext.get(i)+mact2.alistTime.get(i));
-                    mMap.addMarker(opt);
-                    if (i != 0) {
-                        mMap.addPolyline(new PolylineOptions().geodesic(true).add(new LatLng(Double.valueOf(mact2.alistlatitude.get(i - 1)), Double.valueOf(mact2.alistlongitude.get(i - 1))), new LatLng(Double.valueOf(mact2.alistlatitude.get(i)), Double.valueOf(mact2.alistlongitude.get(i)))).width(5).color(Color.RED));
-                    }*/
-                }
+               startActivity(listitt);
             }
         });
     }
@@ -77,31 +70,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             MarkerOptions opt = new MarkerOptions();
             opt.position(mact.alistlocation.get(i));
             opt.title(mact.alisttodo.get(i));
-
-            //opt.snippet(mact.alistTime.get(i));
-
             opt.snippet(mact.alisttext.get(i)+"@"+mact.alistTime.get(i));
 
             mMap.addMarker(opt).showInfoWindow();
             if (i != 0) {
                 mMap.addPolyline(new PolylineOptions().geodesic(true).add(new LatLng(Double.valueOf(mact.alistlatitude.get(i - 1)), Double.valueOf(mact.alistlongitude.get(i - 1))), new LatLng(Double.valueOf(mact.alistlatitude.get(i)), Double.valueOf(mact.alistlongitude.get(i)))).width(5).color(Color.RED));
             }
+
         }
 
         mMap.moveCamera(newLatLng(mact.alistlocation.get(0)));
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+       /* mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+
+                //marker.isVisible();
+
                 for (int i = 0; i < slistsize; i++){
                     MarkerOptions opt = new MarkerOptions();
+                    if(marker.equals(opt)){
 
-                    opt.position(mact.alistlocation.get(i));
-                    opt.title(mact.alisttodo.get(i));
-                    opt.snippet(mact.alisttext.get(i)+"@"+mact.alistTime.get(i));
+                    }else {
+                        opt.position(mact.alistlocation.get(i));
+                        opt.title(mact.alisttodo.get(i));
+                        opt.snippet(mact.alisttext.get(i) + "@" + mact.alistTime.get(i));
 
-                    mMap.addMarker(opt).showInfoWindow();
+                        mMap.addMarker(opt).showInfoWindow();
+                    }
                     if (i != 0) {
                         mMap.addPolyline(new PolylineOptions().geodesic(true).add(new LatLng(Double.valueOf(mact.alistlatitude.get(i - 1)), Double.valueOf(mact.alistlongitude.get(i - 1))), new LatLng(Double.valueOf(mact.alistlatitude.get(i)), Double.valueOf(mact.alistlongitude.get(i)))).width(5).color(Color.RED));
                     }
@@ -110,20 +107,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 return false;
             }
-        });
+        });*/
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                /*SimpleDateFormat df = new SimpleDateFormat("MM/dd/hh:mm");
-                Date clsTime = new Date();
-                String result = df.format(clsTime);
-*/
-
-                int a = Integer.valueOf(marker.getTitle());
-
-                temp=a;
-
                 AlertDialog.Builder adb = new AlertDialog.Builder(MapsActivity.this);
                 type_ll = new LinearLayout(MapsActivity.this);
                 setSpinner();
@@ -132,11 +120,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 type_ll.addView(editText);
                 type_ll.setPadding(50, 0, 0, 0);
 
-
-                //String tmp = String.valueOf(clsTime.getTime());
-                //String result = String.format(tmp,df);
-               // Log.d("we",result);
-               // mact.alistTime.set(temp,result);
+                int a = Integer.valueOf(marker.getTitle());
+                temp=a;
 
                 adb
                         .setTitle("메모")
@@ -146,15 +131,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .setPositiveButton("저장", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+
                                 outermemo = editText.getText().toString();
                                 mact.alisttext.set(temp,outermemo);
-
+                                Log.d("ppp",String.valueOf(temp));
                                 SimpleDateFormat df = new SimpleDateFormat("MM/dd/hh:mm");
                                 Date clsTime = new Date();
                                 String result = df.format(clsTime);
                                 mact.alistTime.set(temp,result);
+                                mact.alistcategory.set(temp,type_str);
                                 temp=0;
                                 type_str = "";
+
+
+
+                                final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                                mapFragment.getMapAsync(MapsActivity.this);
                             }
                         })
                         .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -194,6 +186,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         editText.setHintTextColor(0x50000000);
         editText.setEms(12);
     }
+    public void clickshowlist(){
 
+    }
 
 }

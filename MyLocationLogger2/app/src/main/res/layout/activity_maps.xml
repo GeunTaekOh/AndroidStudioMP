@@ -15,9 +15,9 @@
 <Button
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/refresh"
-    android:text="refresh"
-    android:onClick="clickrefresh"
+    android:id="@+id/showlist"
+    android:text="Show List"
+    android:onClick="clickshowlist"
 
 
     />

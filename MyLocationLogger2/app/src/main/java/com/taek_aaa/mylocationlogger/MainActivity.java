@@ -48,6 +48,7 @@ public class MainActivity extends Activity {
     public static ArrayList<String> alisttodo = null;
     public static ArrayList<String> alisttext = null;
     public static ArrayList<String> alistTime = null;
+    public static ArrayList<String> alistcategory = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class MainActivity extends Activity {
         alisttodo = new ArrayList<String>();
         alisttext = new ArrayList<String>();
         alistTime = new ArrayList<String>();
+        alistcategory = new ArrayList<String>();
         scroll = (ScrollView) findViewById(R.id.scrollview);
         scroll.setVerticalScrollBarEnabled(true);
 
@@ -155,6 +157,7 @@ public class MainActivity extends Activity {
             alisttodo.add(iter, iter+"");
             alisttext.add(iter, "");
             alistTime.add(iter,"");
+            alistcategory.add(iter,"");
             iter++;
             Log.i("저장", "성공");
             dbManager.getResult();
@@ -209,6 +212,7 @@ public class MainActivity extends Activity {
                 alisttodo.add(iter, iter+"");
                 alisttext.add(iter,"");
                 alistTime.add(iter,"");
+                alistcategory.add(iter,"");
                 iter++;
                 Log.d("lis", "한바퀴돔");
             }
