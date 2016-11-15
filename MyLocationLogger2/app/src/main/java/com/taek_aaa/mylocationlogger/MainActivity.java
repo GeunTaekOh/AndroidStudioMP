@@ -46,10 +46,7 @@ public class MainActivity extends Activity {
     public static ArrayList<Double> alistlongitude = null;
     public static ArrayList<LatLng> alistlocation = null;
     public static ArrayList<String> alisttodo = null;
-    String tmpstr;
-
-   // int int_syear, int_smonth, int_sdate, int_shour, int_sminute;
-   // Calendar cal_start;
+    public static ArrayList<String> alisttext = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +61,7 @@ public class MainActivity extends Activity {
         alistlongitude = new ArrayList<Double>();
         alistlocation = new ArrayList<LatLng>();
         alisttodo = new ArrayList<String>();
+        alisttext = new ArrayList<String>();
         scroll = (ScrollView) findViewById(R.id.scrollview);
         scroll.setVerticalScrollBarEnabled(true);
 
@@ -153,6 +151,7 @@ public class MainActivity extends Activity {
             alistlongitude.add(iter, longitudedouble);
             alistlocation.add(iter, new LatLng(alistlatitude.get(iter), alistlongitude.get(iter)));
             alisttodo.add(iter, iter+"");
+            alisttext.add(iter, "");
             iter++;
             Log.i("저장", "성공");
             dbManager.getResult();
@@ -205,6 +204,7 @@ public class MainActivity extends Activity {
                 alistlongitude.add(iter, lo);
                 alistlocation.add(iter, new LatLng(alistlatitude.get(iter), alistlongitude.get(iter)));
                 alisttodo.add(iter, iter+"");
+                alisttext.add(iter,"");
                 iter++;
                 Log.d("lis", "한바퀴돔");
             }

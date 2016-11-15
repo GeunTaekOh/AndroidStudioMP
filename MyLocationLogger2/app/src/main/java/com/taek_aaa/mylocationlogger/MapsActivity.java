@@ -5,10 +5,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -39,29 +39,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     static String outermemo ;
     int slistsize;
     static int temp;
-    static int temp2;
-    //static MarkerOptions opt;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         MapsInitializer.initialize(getApplicationContext());
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        //opt = new MarkerOptions();
+        Button refreshbtn = (Button)findViewById(R.id.refresh);
+        final MainActivity mact2 = new MainActivity();
 
+        refreshbtn.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < slistsize; i++) {
+                    MarkerOptions opt = new MarkerOptions();
+                    opt.position(mact2.alistlocation.get(i));
+                    opt.title(mact2.alisttodo.get(i));
+                    opt.snippet(mact2.alisttext.get(i));
+                    mMap.addMarker(opt);
+                    if (i != 0) {
+                        mMap.addPolyline(new PolylineOptions().geodesic(true).add(new LatLng(Double.valueOf(mact2.alistlatitude.get(i - 1)), Double.valueOf(mact2.alistlongitude.get(i - 1))), new LatLng(Double.valueOf(mact2.alistlatitude.get(i)), Double.valueOf(mact2.alistlongitude.get(i)))).width(5).color(Color.RED));
+                    }
+                }
 
+            }
+        });
     }
-////////////////////////
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         final MainActivity mact = new MainActivity();
-        //Marker mark = new Marker();
-        //MarkerOptions opt = new ;
-
 
         int listsize = mact.alistlongitude.size();
         slistsize=listsize;
@@ -69,7 +78,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             MarkerOptions opt = new MarkerOptions();
             opt.position(mact.alistlocation.get(i));
             opt.title(mact.alisttodo.get(i));
-            Log.d("dddd",mact.alisttodo.get(i));
+            opt.snippet(mact.alisttext.get(i));
             mMap.addMarker(opt).showInfoWindow();
             if (i != 0) {
                 mMap.addPolyline(new PolylineOptions().geodesic(true).add(new LatLng(Double.valueOf(mact.alistlatitude.get(i - 1)), Double.valueOf(mact.alistlongitude.get(i - 1))), new LatLng(Double.valueOf(mact.alistlatitude.get(i)), Double.valueOf(mact.alistlongitude.get(i)))).width(5).color(Color.RED));
@@ -82,52 +91,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                marker.remove();
-
                 for (int i = 0; i < slistsize; i++){
                     MarkerOptions opt = new MarkerOptions();
 
                     opt.position(mact.alistlocation.get(i));
                     opt.title(mact.alisttodo.get(i));
-                    if(mact.alisttodo.get(i)==null){
-                        mact.alisttodo.set(slistsize,""+slistsize);
-                        opt.title(mact.alisttodo.get(slistsize));
-                        Log.d("dddd",mact.alisttodo.get(slistsize));
-
-                        mMap.addMarker(opt).showInfoWindow();
-                    }
-
+                    opt.snippet(mact.alisttext.get(i));
+                    mMap.addMarker(opt).showInfoWindow();
                     if (i != 0) {
                         mMap.addPolyline(new PolylineOptions().geodesic(true).add(new LatLng(Double.valueOf(mact.alistlatitude.get(i - 1)), Double.valueOf(mact.alistlongitude.get(i - 1))), new LatLng(Double.valueOf(mact.alistlatitude.get(i)), Double.valueOf(mact.alistlongitude.get(i)))).width(5).color(Color.RED));
                     }
-                    /*
-                    temp2 =  Integer.valueOf(marker.getTitle());
-                    MarkerOptions opt = new MarkerOptions();
-                    try{
-                        Integer.parseInt(mact.alisttodo.get(i));
-                    }catch(Exception e){
-                        opt.title(mact.alisttodo.get(temp2));
-
-                    }*/
-
-
-
                 }
-/*
-                temp2 = Integer.valueOf(marker.getTitle());
-                MarkerOptions opt = new MarkerOptions();
-                try{
-
-                    Integer.parseInt(mact.alisttodo.get(temp2));
-                }catch(Exception e){
-
-                    opt.position(mact.alistlocation.get(temp2));
-                    opt.title(mact.alisttodo.get(temp2));
-                    mMap.addMarker(opt).showInfoWindow();
-
-                }*/
-
-
                 Toast.makeText(getApplicationContext(), marker.getTitle() + "클릭했음", Toast.LENGTH_SHORT).show();
 
                 return false;
@@ -161,10 +135,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 outermemo = editText.getText().toString();
-                                mact.alisttodo.set(temp,outermemo);
+                                mact.alisttext.set(temp,outermemo);
                                 temp=0;
-
-                                //outermemo=memo;
                                 type_str = "";
                             }
                         })
@@ -174,11 +146,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 dialog.cancel();
                             }
                         });
-
-
-                //mact.alisttodo.iterator().equals().add(outermemo);
-
-
                 AlertDialog ad = adb.create();
                 ad.show();
             }
@@ -210,4 +177,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         editText.setHintTextColor(0x50000000);
         editText.setEms(12);
     }
+
+
 }
