@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -38,6 +39,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     static String outermemo ;
     int slistsize;
     static int temp;
+    static int temp2;
+    //static MarkerOptions opt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapsInitializer.initialize(getApplicationContext());
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        //opt = new MarkerOptions();
 
 
     }
@@ -65,6 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             MarkerOptions opt = new MarkerOptions();
             opt.position(mact.alistlocation.get(i));
             opt.title(mact.alisttodo.get(i));
+            Log.d("dddd",mact.alisttodo.get(i));
             mMap.addMarker(opt).showInfoWindow();
             if (i != 0) {
                 mMap.addPolyline(new PolylineOptions().geodesic(true).add(new LatLng(Double.valueOf(mact.alistlatitude.get(i - 1)), Double.valueOf(mact.alistlongitude.get(i - 1))), new LatLng(Double.valueOf(mact.alistlatitude.get(i)), Double.valueOf(mact.alistlongitude.get(i)))).width(5).color(Color.RED));
@@ -77,23 +82,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+                marker.remove();
 
-                //marker.remove();
-                for (int i = 0; i < slistsize; i++) {
+                for (int i = 0; i < slistsize; i++){
                     MarkerOptions opt = new MarkerOptions();
 
                     opt.position(mact.alistlocation.get(i));
                     opt.title(mact.alisttodo.get(i));
-                    if(mact.alisttodo.get(i).isEmpty()){
+                    if(mact.alisttodo.get(i)==null){
                         mact.alisttodo.set(slistsize,""+slistsize);
                         opt.title(mact.alisttodo.get(slistsize));
+                        Log.d("dddd",mact.alisttodo.get(slistsize));
 
+                        mMap.addMarker(opt).showInfoWindow();
                     }
-                    mMap.addMarker(opt).showInfoWindow();
+
                     if (i != 0) {
                         mMap.addPolyline(new PolylineOptions().geodesic(true).add(new LatLng(Double.valueOf(mact.alistlatitude.get(i - 1)), Double.valueOf(mact.alistlongitude.get(i - 1))), new LatLng(Double.valueOf(mact.alistlatitude.get(i)), Double.valueOf(mact.alistlongitude.get(i)))).width(5).color(Color.RED));
                     }
+                    /*
+                    temp2 =  Integer.valueOf(marker.getTitle());
+                    MarkerOptions opt = new MarkerOptions();
+                    try{
+                        Integer.parseInt(mact.alisttodo.get(i));
+                    }catch(Exception e){
+                        opt.title(mact.alisttodo.get(temp2));
+
+                    }*/
+
+
+
                 }
+/*
+                temp2 = Integer.valueOf(marker.getTitle());
+                MarkerOptions opt = new MarkerOptions();
+                try{
+
+                    Integer.parseInt(mact.alisttodo.get(temp2));
+                }catch(Exception e){
+
+                    opt.position(mact.alistlocation.get(temp2));
+                    opt.title(mact.alisttodo.get(temp2));
+                    mMap.addMarker(opt).showInfoWindow();
+
+                }*/
 
 
                 Toast.makeText(getApplicationContext(), marker.getTitle() + "클릭했음", Toast.LENGTH_SHORT).show();
@@ -107,36 +139,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onInfoWindowClick(Marker marker) {
                 Date clsTime = new Date();
 
-
-/*
-                Intent clsIntent = new Intent( Intent.ACTION_INSERT );
-                Intent getintent = getIntent();
-                Bundle bundle = new Bundle();
-
-                clsIntent.setData( events.CONTENT_URI );
-                clsIntent.putExtra( CalendarContract.EXTRA_EVENT_BEGIN_TIME, clsTime.getTime( ) );
-                clsIntent.putExtra( CalendarContract.EXTRA_EVENT_END_TIME, clsTime.getTime() + 3600000 );
-                //clsIntent.putExtra( events.TITLE, "일정 제목" );
-                clsIntent.putExtra(events.TITLE,"");
-                clsIntent.putExtra(events.DESCRIPTION,"");
-                //   bundle.putString("key_string",events.TITLE);
-                //   clsIntent.putExtra(bundle);
-
-                startActivity( clsIntent );
-                //startActivity(getintent);
-                 SimpleDateFormat df = new SimpleDateFormat("MM/dd/hh:mm");
-                //String to_do = getintent.getStringExtra(events.TITLE);
-                String to_do = clsIntent.getExtras().getString(events.TITLE);       //일정 제목 으로만받아짐.
-                //String to_do = clsIntent.getExtras().getString("title");
-
-                String result = df.format(clsTime.getTime());
-
-                //marker.setTitle(""+result+""+clsIntent.getExtras().getString(events.TITLE));
-                */
-                //marker.setTitle(""+result+"  "+to_do);
-                //marker.setTitle(""+result);
-
-                //marker.setTitle(""+to_do);
 
                 int a = Integer.valueOf(marker.getTitle());
 //지금 일정제목안받아와지고 일정시간이 현재시간으로계속다받아짐..
@@ -160,7 +162,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             public void onClick(DialogInterface dialog, int which) {
                                 outermemo = editText.getText().toString();
                                 mact.alisttodo.set(temp,outermemo);
-                                //db.insert_memo(ll_memo.latitude, ll_memo.longitude, type_str, memo);
+                                temp=0;
+
                                 //outermemo=memo;
                                 type_str = "";
                             }
