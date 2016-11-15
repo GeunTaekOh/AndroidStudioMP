@@ -36,6 +36,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     EditText editText;
     LinearLayout type_ll;
     static String outermemo ;
+    int slistsize;
+    static int temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,21 +46,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapsInitializer.initialize(getApplicationContext());
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-    }
 
+
+
+    }
+////////////////////////
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         final MainActivity mact = new MainActivity();
-        //Marker mark;
-        //MarkerOptions opt;
+        //Marker mark = new Marker();
+        //MarkerOptions opt = new ;
 
 
         int listsize = mact.alistlongitude.size();
+        slistsize=listsize;
         for (int i = 0; i < listsize; i++) {
             MarkerOptions opt = new MarkerOptions();
             opt.position(mact.alistlocation.get(i));
-            opt.title("here you are!" + (i + 1));
+            opt.title(mact.alisttodo.get(i));
             mMap.addMarker(opt).showInfoWindow();
             if (i != 0) {
                 mMap.addPolyline(new PolylineOptions().geodesic(true).add(new LatLng(Double.valueOf(mact.alistlatitude.get(i - 1)), Double.valueOf(mact.alistlongitude.get(i - 1))), new LatLng(Double.valueOf(mact.alistlatitude.get(i)), Double.valueOf(mact.alistlongitude.get(i)))).width(5).color(Color.RED));
@@ -71,7 +77,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+
+                //marker.remove();
+                for (int i = 0; i < slistsize; i++) {
+                    MarkerOptions opt = new MarkerOptions();
+
+                    opt.position(mact.alistlocation.get(i));
+                    opt.title(mact.alisttodo.get(i));
+                    if(mact.alisttodo.get(i).isEmpty()){
+                        mact.alisttodo.set(slistsize,""+slistsize);
+                        opt.title(mact.alisttodo.get(slistsize));
+
+                    }
+                    mMap.addMarker(opt).showInfoWindow();
+                    if (i != 0) {
+                        mMap.addPolyline(new PolylineOptions().geodesic(true).add(new LatLng(Double.valueOf(mact.alistlatitude.get(i - 1)), Double.valueOf(mact.alistlongitude.get(i - 1))), new LatLng(Double.valueOf(mact.alistlatitude.get(i)), Double.valueOf(mact.alistlongitude.get(i)))).width(5).color(Color.RED));
+                    }
+                }
+
+
                 Toast.makeText(getApplicationContext(), marker.getTitle() + "클릭했음", Toast.LENGTH_SHORT).show();
+
                 return false;
             }
         });
@@ -112,8 +138,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 //marker.setTitle(""+to_do);
 
-
+                int a = Integer.valueOf(marker.getTitle());
 //지금 일정제목안받아와지고 일정시간이 현재시간으로계속다받아짐..
+                temp=a;
 
                 AlertDialog.Builder adb = new AlertDialog.Builder(MapsActivity.this);
                 type_ll = new LinearLayout(MapsActivity.this);
@@ -132,6 +159,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 outermemo = editText.getText().toString();
+                                mact.alisttodo.set(temp,outermemo);
                                 //db.insert_memo(ll_memo.latitude, ll_memo.longitude, type_str, memo);
                                 //outermemo=memo;
                                 type_str = "";
@@ -145,7 +173,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         });
 
 
-                marker.setTitle(outermemo);
+                //mact.alisttodo.iterator().equals().add(outermemo);
+
+
                 AlertDialog ad = adb.create();
                 ad.show();
             }
