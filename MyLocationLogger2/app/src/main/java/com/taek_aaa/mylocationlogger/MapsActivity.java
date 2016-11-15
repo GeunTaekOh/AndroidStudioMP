@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.google.android.gms.maps.CameraUpdateFactory.newLatLng;
@@ -48,22 +49,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         Button refreshbtn = (Button)findViewById(R.id.refresh);
-        final MainActivity mact2 = new MainActivity();
 
         refreshbtn.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View v) {
                 for (int i = 0; i < slistsize; i++) {
                     MarkerOptions opt = new MarkerOptions();
-                    opt.position(mact2.alistlocation.get(i));
+                   /* opt.position(mact2.alistlocation.get(i));
                     opt.title(mact2.alisttodo.get(i));
-                    opt.snippet(mact2.alisttext.get(i));
+                    opt.snippet(mact2.alisttext.get(i)+mact2.alistTime.get(i));
                     mMap.addMarker(opt);
                     if (i != 0) {
                         mMap.addPolyline(new PolylineOptions().geodesic(true).add(new LatLng(Double.valueOf(mact2.alistlatitude.get(i - 1)), Double.valueOf(mact2.alistlongitude.get(i - 1))), new LatLng(Double.valueOf(mact2.alistlatitude.get(i)), Double.valueOf(mact2.alistlongitude.get(i)))).width(5).color(Color.RED));
-                    }
+                    }*/
                 }
-
             }
         });
     }
@@ -78,7 +77,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             MarkerOptions opt = new MarkerOptions();
             opt.position(mact.alistlocation.get(i));
             opt.title(mact.alisttodo.get(i));
-            opt.snippet(mact.alisttext.get(i));
+
+            //opt.snippet(mact.alistTime.get(i));
+
+            opt.snippet(mact.alisttext.get(i)+"@"+mact.alistTime.get(i));
+
             mMap.addMarker(opt).showInfoWindow();
             if (i != 0) {
                 mMap.addPolyline(new PolylineOptions().geodesic(true).add(new LatLng(Double.valueOf(mact.alistlatitude.get(i - 1)), Double.valueOf(mact.alistlongitude.get(i - 1))), new LatLng(Double.valueOf(mact.alistlatitude.get(i)), Double.valueOf(mact.alistlongitude.get(i)))).width(5).color(Color.RED));
@@ -96,7 +99,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     opt.position(mact.alistlocation.get(i));
                     opt.title(mact.alisttodo.get(i));
-                    opt.snippet(mact.alisttext.get(i));
+                    opt.snippet(mact.alisttext.get(i)+"@"+mact.alistTime.get(i));
+
                     mMap.addMarker(opt).showInfoWindow();
                     if (i != 0) {
                         mMap.addPolyline(new PolylineOptions().geodesic(true).add(new LatLng(Double.valueOf(mact.alistlatitude.get(i - 1)), Double.valueOf(mact.alistlongitude.get(i - 1))), new LatLng(Double.valueOf(mact.alistlatitude.get(i)), Double.valueOf(mact.alistlongitude.get(i)))).width(5).color(Color.RED));
@@ -111,11 +115,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
+                /*SimpleDateFormat df = new SimpleDateFormat("MM/dd/hh:mm");
                 Date clsTime = new Date();
-
+                String result = df.format(clsTime);
+*/
 
                 int a = Integer.valueOf(marker.getTitle());
-//지금 일정제목안받아와지고 일정시간이 현재시간으로계속다받아짐..
+
                 temp=a;
 
                 AlertDialog.Builder adb = new AlertDialog.Builder(MapsActivity.this);
@@ -125,6 +131,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 type_ll.addView(spinner);
                 type_ll.addView(editText);
                 type_ll.setPadding(50, 0, 0, 0);
+
+
+                //String tmp = String.valueOf(clsTime.getTime());
+                //String result = String.format(tmp,df);
+               // Log.d("we",result);
+               // mact.alistTime.set(temp,result);
 
                 adb
                         .setTitle("메모")
@@ -136,6 +148,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             public void onClick(DialogInterface dialog, int which) {
                                 outermemo = editText.getText().toString();
                                 mact.alisttext.set(temp,outermemo);
+
+                                SimpleDateFormat df = new SimpleDateFormat("MM/dd/hh:mm");
+                                Date clsTime = new Date();
+                                String result = df.format(clsTime);
+                                mact.alistTime.set(temp,result);
                                 temp=0;
                                 type_str = "";
                             }
