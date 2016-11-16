@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
     MyLocationListener mll = null;
     Location mLocation;
     SQLiteDatabase db;
-    final static int interval_time =1000*60*3;
+    final static int interval_time =1000*60*10;
     public static ArrayList<Double> alistlatitude = null;
     public static ArrayList<Double> alistlongitude = null;
     public static ArrayList<LatLng> alistlocation = null;
