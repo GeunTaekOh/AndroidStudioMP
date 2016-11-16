@@ -42,6 +42,7 @@ public class MainActivity extends Activity {
     MyLocationListener mll = null;
     Location mLocation;
     SQLiteDatabase db;
+    final static int interval_time =1000*60*3;
     public static ArrayList<Double> alistlatitude = null;
     public static ArrayList<Double> alistlongitude = null;
     public static ArrayList<LatLng> alistlocation = null;
@@ -98,10 +99,10 @@ public class MainActivity extends Activity {
             Toast.makeText(getBaseContext(), "Gps turned off ", Toast.LENGTH_LONG).show();
         } else {
             if (isGps) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, mll);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, interval_time, 0, mll);
                 Toast.makeText(this, "GPS로 좌표값을 가져옵니다", Toast.LENGTH_SHORT).show();
             } else if (isNetwork) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, mll);  //3000 -> 3초
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, interval_time, 0, mll);  //3000 -> 3초
                 Toast.makeText(this, "네트워크로 좌표값을 가져옵니다", Toast.LENGTH_SHORT).show();
             } else {
                 exit(1);

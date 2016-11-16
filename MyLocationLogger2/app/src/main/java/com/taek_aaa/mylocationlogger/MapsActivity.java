@@ -82,33 +82,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(newLatLng(mact.alistlocation.get(0)));
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
-       /* mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-
-                //marker.isVisible();
-
-                for (int i = 0; i < slistsize; i++){
-                    MarkerOptions opt = new MarkerOptions();
-                    if(marker.equals(opt)){
-
-                    }else {
-                        opt.position(mact.alistlocation.get(i));
-                        opt.title(mact.alisttodo.get(i));
-                        opt.snippet(mact.alisttext.get(i) + "@" + mact.alistTime.get(i));
-
-                        mMap.addMarker(opt).showInfoWindow();
-                    }
-                    if (i != 0) {
-                        mMap.addPolyline(new PolylineOptions().geodesic(true).add(new LatLng(Double.valueOf(mact.alistlatitude.get(i - 1)), Double.valueOf(mact.alistlongitude.get(i - 1))), new LatLng(Double.valueOf(mact.alistlatitude.get(i)), Double.valueOf(mact.alistlongitude.get(i)))).width(5).color(Color.RED));
-                    }
-                }
-                Toast.makeText(getApplicationContext(), marker.getTitle() + "클릭했음", Toast.LENGTH_SHORT).show();
-
-                return false;
-            }
-        });*/
-
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {

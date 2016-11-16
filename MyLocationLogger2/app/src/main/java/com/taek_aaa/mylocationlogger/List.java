@@ -69,12 +69,5 @@ public class List extends Activity{
         tv2.append("2nd."+arystr[2] + " : "+ary[2]);
         tv3.append("3th."+arystr[1] + " : "+ary[1]);
         tv4.append("4th."+arystr[0] + " : "+ary[0]);
-
-
-
-
-
-
-
     }
 }
