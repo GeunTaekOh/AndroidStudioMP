@@ -13,7 +13,6 @@ public class List extends Activity{
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-
         MainActivity mact = new MainActivity();
         int alsize = mact.alistlatitude.size();
         int studynum = 0;
@@ -27,7 +26,6 @@ public class List extends Activity{
         TextView tv3 = (TextView)findViewById(R.id.tv3);
         TextView tv4 = (TextView)findViewById(R.id.tv4);
 
-
         for(int i=0; i<alsize; i++) {
             if(mact.alistcategory.get(i).toString().equals("공부")){
                 studynum++;
@@ -40,7 +38,6 @@ public class List extends Activity{
                 walkingnum++;
             }
         }
-
         ary[0] = studynum;
         arystr[0] = "공부";
         ary[1] = eatnum;
@@ -51,7 +48,6 @@ public class List extends Activity{
         arystr[3] = "산책";
         int tmp=0;
         String tmpstr = null;
-
         for(int i=0; i<ary.length-1; i++){
             for(int j=i+1; j<ary.length; j++){
                 if(ary[i]>ary[j]){

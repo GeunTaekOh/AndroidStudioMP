@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
     MyLocationListener mll = null;
     Location mLocation;
     SQLiteDatabase db;
-    final static int interval_time =1000*60*10;
+    final static int interval_time =1000*60*3;
     public static ArrayList<Double> alistlatitude = null;
     public static ArrayList<Double> alistlongitude = null;
     public static ArrayList<LatLng> alistlocation = null;
@@ -55,11 +55,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mll = new MyLocationListener();
         mDisplayDbEt = (TextView) findViewById(R.id.dbtv);
-
         alistlatitude = new ArrayList<Double>();
         alistlongitude = new ArrayList<Double>();
         alistlocation = new ArrayList<LatLng>();
@@ -72,42 +68,8 @@ public class MainActivity extends Activity {
 
         final Intent mapitt = new Intent(this, MapsActivity.class);
         Button mapbtn = (Button) findViewById(R.id.viewMapbtn);
+        getLocation();
 
-        //- SDK 23버전 이상 (마시멜로우 이상부터)부터는 아래 처럼 권한을 사용자가 직접 허가해주어야 GPS기능을 사용가능 GPS 기능을 사용하기전 위치에 추가해야함
-        //체크 퍼미션
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-        }
-
-        boolean isGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean isNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-////
-        if (!isGps && !isNetwork) {
-            new AlertDialog.Builder(MainActivity.this)
-                    .setMessage("GPS가 꺼져있습니다.\n ‘위치 서비스’에서 ‘Google 위치 서비스’를 체크해주세요")
-                    .setPositiveButton("설정", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivity(intent);
-                            //startActivityForResult(intent,);
-                        }
-
-                    })
-                    .setNegativeButton("취소", null).show();
-            Toast.makeText(getBaseContext(), "Gps turned off ", Toast.LENGTH_LONG).show();
-        } else {
-            if (isGps) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, interval_time, 0, mll);
-                Toast.makeText(this, "GPS로 좌표값을 가져옵니다", Toast.LENGTH_SHORT).show();
-            } else if (isNetwork) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, interval_time, 0, mll);  //3000 -> 3초
-                Toast.makeText(this, "네트워크로 좌표값을 가져옵니다", Toast.LENGTH_SHORT).show();
-            } else {
-                exit(1);
-            }
-        }
         mapbtn.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 startActivity(mapitt);
@@ -138,7 +100,6 @@ public class MainActivity extends Activity {
     }
 
     public class MyLocationListener implements LocationListener {
-
         @Override
         public void onLocationChanged(Location location) {
             mLocation = location;
@@ -163,13 +124,11 @@ public class MainActivity extends Activity {
             Log.i("저장", "성공");
             dbManager.getResult();
             Toast.makeText(MainActivity.this, "DB에 입력 되었습니다.", Toast.LENGTH_SHORT).show();
-
             mLocation = location;
         }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-
         }
 
         @Override
@@ -196,43 +155,47 @@ public class MainActivity extends Activity {
     }
 
     public void onclicklocationbtn(View v) {
-        class mLocationListener implements LocationListener {
-            @Override
-            public void onLocationChanged(Location location) {
-                Double la = location.getLatitude();
-                Double lo = location.getLongitude();
-                String str = "Latitude: " + location.getLatitude() + "\n" + "Longitude: " + location.getLongitude() + "\n";
-                TextView tv = (TextView) findViewById(R.id.textview);
-                tv.append(str);
-                Toast.makeText(getBaseContext(), str, Toast.LENGTH_SHORT).show();
-                dbManager.insert(la, lo);
+                getLocation();
+    }
 
-                alistlatitude.add(iter, la);
-                alistlongitude.add(iter, lo);
-                alistlocation.add(iter, new LatLng(alistlatitude.get(iter), alistlongitude.get(iter)));
-                alisttodo.add(iter, iter+"");
-                alisttext.add(iter,"");
-                alistTime.add(iter,"");
-                alistcategory.add(iter,"");
-                iter++;
-                Log.d("lis", "한바퀴돔");
-            }
+    public void getLocation(){
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mll = new MyLocationListener();
+        //- SDK 23버전 이상 (마시멜로우 이상부터)부터는 아래 처럼 권한을 사용자가 직접 허가해주어야 GPS기능을 사용가능 GPS 기능을 사용하기전 위치에 추가해야함
+        //체크 퍼미션
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        }
+        boolean isGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean isNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
+        if (!isGps && !isNetwork) {
+            new AlertDialog.Builder(MainActivity.this)
+                    .setMessage("GPS가 꺼져있습니다.\n ‘위치 서비스’에서 ‘Google 위치 서비스’를 체크해주세요")
+                    .setPositiveButton("설정", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-            @Override
-            public void onProviderEnabled(String provider) {
-            }
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                            //startActivityForResult(intent,);
+                        }
 
-            @Override
-            public void onProviderDisabled(String provider) {
+                    })
+                    .setNegativeButton("취소", null).show();
+            Toast.makeText(getBaseContext(), "Gps turned off ", Toast.LENGTH_LONG).show();
+        } else {
+            if (isGps) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, interval_time, 0, mll);
+                Toast.makeText(this, "GPS로 좌표값을 가져옵니다", Toast.LENGTH_SHORT).show();
+            } else if (isNetwork) {
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, interval_time, 0, mll);  //3000 -> 3초
+                Toast.makeText(this, "네트워크로 좌표값을 가져옵니다", Toast.LENGTH_SHORT).show();
+            } else {
+                exit(1);
             }
         }
     }
-
-
 }
 
 

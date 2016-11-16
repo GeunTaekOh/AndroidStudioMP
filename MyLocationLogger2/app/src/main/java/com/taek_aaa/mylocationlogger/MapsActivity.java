@@ -159,8 +159,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         editText.setHintTextColor(0x50000000);
         editText.setEms(12);
     }
-    public void clickshowlist(){
-
-    }
 
 }
