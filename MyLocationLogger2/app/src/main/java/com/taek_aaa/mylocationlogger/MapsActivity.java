@@ -63,7 +63,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         final MainActivity mact = new MainActivity();
-
         int listsize = mact.alistlongitude.size();
         slistsize=listsize;
         for (int i = 0; i < listsize; i++) {
@@ -76,9 +75,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (i != 0) {
                 mMap.addPolyline(new PolylineOptions().geodesic(true).add(new LatLng(Double.valueOf(mact.alistlatitude.get(i - 1)), Double.valueOf(mact.alistlongitude.get(i - 1))), new LatLng(Double.valueOf(mact.alistlatitude.get(i)), Double.valueOf(mact.alistlongitude.get(i)))).width(5).color(Color.RED));
             }
-
         }
-
         mMap.moveCamera(newLatLng(mact.alistlocation.get(0)));
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
@@ -92,10 +89,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 type_ll.addView(spinner);
                 type_ll.addView(editText);
                 type_ll.setPadding(50, 0, 0, 0);
-
                 int a = Integer.valueOf(marker.getTitle());
                 temp=a;
-
                 adb
                         .setTitle("메모")
                         .setCancelable(false)
@@ -104,7 +99,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .setPositiveButton("저장", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
                                 outermemo = editText.getText().toString();
                                 mact.alisttext.set(temp,outermemo);
                                 Log.d("ppp",String.valueOf(temp));
@@ -115,9 +109,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 mact.alistcategory.set(temp,type_str);
                                 temp=0;
                                 type_str = "";
-
-
-
                                 final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                                 mapFragment.getMapAsync(MapsActivity.this);
                             }
@@ -151,7 +142,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
-
     }
     public void setEditText(){
         editText = new EditText(this);
@@ -159,5 +149,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         editText.setHintTextColor(0x50000000);
         editText.setEms(12);
     }
-
 }
