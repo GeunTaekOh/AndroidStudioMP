@@ -10,28 +10,27 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:gravity="center_horizontal"
     android:orientation="horizontal"
-    tools:context="com.taek_aaa.quickcoding06.MainActivity">
+    tools:context="com.taek_aaa.myapplication.MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:id="@+id/text_view"
+        android:id="@+id/tv"
         />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_below="@+id/text_view"
-        android:layout_alignLeft="@+id/text_view"
-        android:layout_alignStart="@+id/text_view"
+        android:layout_below="@+id/tv"
+        android:layout_alignLeft="@+id/tv"
+        android:layout_alignStart="@+id/tv"
         android:layout_marginTop="145dp">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Reset"
-            android:onClick="onClick_Reset"
             android:id="@+id/resetButton"
             android:gravity="center"
             />
