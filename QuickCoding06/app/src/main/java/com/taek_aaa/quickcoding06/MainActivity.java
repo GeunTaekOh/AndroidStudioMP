@@ -1,4 +1,4 @@
-package com.taek_aaa.quickcoding06;
+package com.taek_aaa.myapplication;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -10,28 +10,39 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+public class MainActivity extends AppCompatActivity implements SensorEventListener{
+
     public static int count = 0;
     TextView textView;
-    Button buttonReset;
-    private long lastTime;
-    private float speed, lastX, lastY, lastZ;
-    private float x, y, z;
-    private SensorManager sensorManager;
-    private Sensor sensor;
+    Button resetBtn;
+    public long lastTime;
+    public float speed, lastX,lastY,lastZ;
+    public float x,y,z;
+
+    public SensorManager sensorManager;
+    public Sensor sensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        textView = (TextView)findViewById(R.id.tv);
+        resetBtn = (Button)findViewById(R.id.resetButton);
+        textView.setText("You walked "+count+" Steps!!");
+        sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        textView = (TextView) findViewById(R.id.text_view);
-        buttonReset = (Button) findViewById(R.id.resetButton);
-        textView.setText("You Walked " + count + " Steps!!!");
-    }
 
+        resetBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                count=0;
+                textView.setText("You walked "+count+" Steps!!");
+            }
+        });
+
+
+    }
     @Override
     public void onStart() {
         super.onStart();
@@ -46,36 +57,34 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             sensorManager.unregisterListener(this);
     }
 
+
+
     @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if(sensorEvent.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
             long currentTime = System.currentTimeMillis();
-            long gabOfTime = (currentTime - lastTime);
-            if (gabOfTime > 100) {
-                lastTime = currentTime;
-                x = event.values[SensorManager.DATA_X];
-                y = event.values[SensorManager.DATA_Y];
-                z = event.values[SensorManager.DATA_Z];
+            long gapOfTime = (currentTime-lastTime);
+            if(gapOfTime>100){
+                lastTime=currentTime;
+                x=sensorEvent.values[SensorManager.DATA_X];
+                y=sensorEvent.values[SensorManager.DATA_Y];
+                z=sensorEvent.values[SensorManager.DATA_Z];
 
-                speed = Math.abs(x + y + z - lastX - lastY - lastZ) / gabOfTime * 10000;
+                speed=Math.abs(x+y+z - lastX-lastY-lastZ)/gapOfTime*10000;
 
-                if (speed > 800) {
-                    textView.setText("You Walked " + (++count) + " Steps!!!");
+                if(speed>900){
+                    textView.setText("You walked "+(++count)+" Steps!!");
                 }
 
-                lastX = event.values[SensorManager.DATA_X];
-                lastY = event.values[SensorManager.DATA_Y];
-                lastZ = event.values[SensorManager.DATA_Z];
+                lastX = sensorEvent.values[SensorManager.DATA_X];
+                lastY = sensorEvent.values[SensorManager.DATA_Y];
+                lastZ = sensorEvent.values[SensorManager.DATA_Z];
             }
         }
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    }
+    public void onAccuracyChanged(Sensor sensor, int i) {
 
-    public void onClick_Reset(View v) {
-        count = 0;
-        textView.setText("You Walked " + count + " Steps!!!");
     }
 }
