@@ -1,4 +1,5 @@
 # AndroidStudioMP
 
-LocationLogger1에서 확장하여서 LocationLogger2를 만들었기때문에
-LocationLOgger1을 확인하고 싶으시면 LocationLogger2의 커밋을 확인해주시면 됩니다.
+국민대학교 모바일프로그래밍 과목 기말 프로젝트
+
+현재 위치를 기반으로 간단한 메모나 일기 작성하는 개인 다이어리
